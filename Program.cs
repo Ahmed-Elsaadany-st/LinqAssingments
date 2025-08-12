@@ -22,13 +22,31 @@ namespace LinqAssingment01
             //} 
             #endregion
             #region 3. Returns digits whose name is shorter than their value.
-            String[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
-            var Result = Arr.Where((name, value) => name.Length < value);
-            foreach (var name in Result)
-            {
-                Console.WriteLine(name);
-            }
+            //String[] Arr = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            //var Result = Arr.Where((name, value) => name.Length < value);
+            //foreach (var name in Result)
+            //{
+            //    Console.WriteLine(name);
+            //}
+            #endregion
+            #region Demo part
+            #region Example01
+            //Action action = FunctionsReturnsDelegate.DelegateAction();
+            //action();
+
+            //FunctionsReturnsDelegate.DelegateAction()(); 
+            #endregion
+            #region Example02
+            //Console.WriteLine(FunctionsReturnsDelegate.DelegatePredicate()(3));
+            //Console.WriteLine(FunctionsReturnsDelegate.DelegatePredicate()(-1));
+            #endregion
+            #region Example03
+            //char[] arr = { 'H', 'e', 'l', 'l', 'o' };
+            //string word = FunctionsReturnsDelegate.DelegateFunc(arr);
+            //Console.WriteLine(word); // Hello
+            #endregion
             #endregion
         }
+
     }
 }
