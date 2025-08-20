@@ -1,7 +1,11 @@
 ﻿
+using System.Collections.Generic;
 using System.Runtime.Intrinsics.Arm;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Cryptography;
 using System.Threading;
 using static LinqAssingment01.ListGenerator;
+using static System.Net.Mime.MediaTypeNames;
 namespace LinqAssingment01
 
 {
@@ -158,6 +162,62 @@ namespace LinqAssingment01
             //Console.WriteLine((int)AvgLength);
 
             #endregion
+            #region 9. Get the total units in stock for each product category.
+            //var result= ProductsList.GroupBy(p => p.Category)
+            //            .Select(g => new { g.Key, TotalUnitsInStock = g.Sum(p => p.UnitsInStock) });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #region 10. Get the cheapest price among each category's products
+            //var cheapestInEachCategory = ProductsList.GroupBy(c => c.Category).Select(g => new { g.Key, cheapest = g.Min(p => p.UnitPrice) });
+            //foreach (var item in cheapestInEachCategory)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #region 11. Get the products with the cheapest price in each category (Use Let)
+            //var result = from p in ProductsList
+            //             group p by p.Category into g
+            //             let minPrice = g.Min(p => p.UnitPrice)
+            //             from prod in g
+            //             where prod.UnitPrice == minPrice
+            //             select new
+            //             {
+            //                 Category=g.Key,prodName=prod.ProductName,prodPrice=prod.UnitPrice
+
+            //             };
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+
+            #endregion
+            #region 12. Get the most expensive price among each category's products.
+            //var result = ProductsList.GroupBy(c => c.Category).Select(g => new { Category = g.Key, most_Expensive = g.Max(p => p.UnitPrice) });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #region 13. Get the products with the most expensive price in each category
+            //var result = ProductsList.GroupBy(c => c.Category).Select(g => new { Category = g.Key, most_Expensive = g.OrderByDescending(p => p.UnitPrice).Select(p => new {p.ProductID,p.ProductName,p.UnitPrice}).FirstOrDefault()});
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #region 14. Get the average price of each category's products.
+            //var result = ProductsList.GroupBy(c => c.Category).Select(g => new { Category = g.Key, AvgPrice = g.Average(p => p.UnitPrice) });
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            #endregion
+
             #endregion
             #region LINQ - Ordering Operators
             #region 1. Sort a list of products by name
@@ -267,18 +327,27 @@ namespace LinqAssingment01
             //}
             #endregion
             #region 5. Returns all pairs of numbers from both arrays such that the number from numbersA is less than the number from numbersB.
-            int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
-            int[] numbersB = { 1, 3, 5, 7, 8 };
-            var pairs = from a in numbersA
-                        from b  in numbersB
-                        where a < b
-                        select new { A = a, B = b }
-                      ;
-                Console.WriteLine("Pairs where a < b:");
-                 foreach (var pair in pairs)
-                 {
-                     Console.WriteLine($"{pair.A} is less than {pair.B}");
-                 }
+            //int[] numbersA = { 0, 2, 4, 5, 6, 8, 9 };
+            //int[] numbersB = { 1, 3, 5, 7, 8 };
+            //var pairs = from a in numbersA
+            //            from b  in numbersB
+            //            where a < b
+            //            select new { A = a, B = b }
+            //          ;
+            //    Console.WriteLine("Pairs where a < b:");
+            //     foreach (var pair in pairs)
+            //     {
+            //         Console.WriteLine($"{pair.A} is less than {pair.B}");
+            //     }
+            #region Explain
+            /*from a in numbersA → يبدأ يمر على كل عنصر في numbersA.
+              
+              from b in numbersB → لكل a، يمر على كل عناصر numbersB (تكرار متداخل).
+              
+              where a < b → فلترة، نحتفظ فقط بالأزواج التي تحقق الشرط.
+              
+              select new { ... } → نرجع كل زوج في كائن مجهول النوع (anonymous type).*/
+            #endregion
             #endregion
             #region 6. Select all orders where the order total is less than 500.00.
             //var OrderList = CustomersList.SelectMany(o => o.Orders).Where(o => o.Total < 500);
@@ -297,6 +366,180 @@ namespace LinqAssingment01
             //    Console.WriteLine(i);
             //}
 
+            #endregion
+            #endregion
+            #region LINQ - Set Operators
+            #region 1. Find the unique Category names from Product List
+            //var result = ProductsList
+            //    .Select(p => p.Category)
+            //    .Distinct();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine(element);
+            //}
+            #endregion
+            #region 2. Produce a Sequence containing the unique first letter from both product and customer names.
+            //var result = ProductsList.Select(p => p.ProductName[0]).Union(CustomersList.Select(c => c.CustomerName[0])).ToList();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine(element);
+            //}
+            #endregion
+            #region 3. Create one sequence that contains the common first letter from both product and customer names.
+            //var result = ProductsList.Select(p => p.ProductName[0]).Intersect(CustomersList.Select(c => c.CustomerName[0])).ToList();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine( element);
+            //}
+            #endregion
+            #region 4. Create one sequence that contains the first letters of product names that are not also first letters of customer names.
+            //var result = ProductsList.Select(p => p.ProductName[0]).Except(CustomersList.Select(c => c.CustomerName[0])).ToList();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine( element);
+            //}
+            #endregion
+            #region 5. Create one sequence that contains the last Three Characters in each name of all customers and products, including any duplicates
+            //var result = ProductsList.Select(p => p.ProductName.Substring(p.ProductName.Length - 3)).Concat(CustomersList.Select(c => c.CustomerName.Substring(c.CustomerName.Length - 3))).ToList();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine(element);
+            //}
+            #endregion
+            #endregion
+            #region LINQ - Partitioning Operators
+            //Note:TakeWhile,SkipWhile onec the condition is false it stops passing over the remaining elements ulike Where it filters all elements
+            #region 1. Get the first 3 orders from customers in Seattle
+            //string cityName = "Washington";
+            //string cityname = "Seattle";
+            //var result = CustomersList.Where(c => c.City == cityname)
+            //                          .SelectMany(c => c.Orders)
+            //                          .Take(3);
+
+            //foreach (var order in result)
+            //{
+            //    Console.WriteLine(order);
+            //}
+
+            //there is no city named Washington
+
+            #region Cities
+            //var cities = CustomersList.Select(c => c.City).Distinct();
+            //foreach (var city in cities)
+            //{
+            //    Console.WriteLine(city);
+            //}
+            #endregion
+            #endregion
+            #region 2. Get all but the first 2 orders from customers in Seattle.
+            //var result = CustomersList.Where(C => C.City == "Seattle").SelectMany(o => o.Orders).Skip(2);
+            //foreach (var item in result)
+            //{
+            //    Console.WriteLine(item);
+            //}
+            #endregion
+            #region 3. Return elements starting from the beginning of the array until a number is hit that is less than its position in the array.
+            //int[] Nums = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result=Nums.TakeWhile((x,y)=>x>y).ToList();
+            //foreach (var element in result)
+            //{
+            //    Console.WriteLine(element);
+            //}
+            #endregion
+            #region 4.Get the elements of the array starting from the first element divisible by 3.
+            //int[] nums = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result=nums.SkipWhile(n=>n%3!=0).ToList();
+            //foreach (var number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
+            #endregion
+            #region 5. Get the elements of the array starting from the first element less than its position.
+            //int[] nums = { 5, 4, 1, 3, 9, 8, 6, 7, 2, 0 };
+            //var result = nums.SkipWhile((val, index) => val > index);
+            //foreach (var number in result)
+            //{
+            //    Console.WriteLine(number);
+            //}
+            #endregion
+            #endregion
+            #region LINQ - Quantifiers
+            #region 1. Determine if any of the words in dictionary_english.txt (Read dictionary_english.txt into Array of String First) contain the substring 'ei'.
+            //var lines = File.ReadAllLines("dictionary_english.txt").ToArray();
+            //var result = lines.Any(w => w.Contains("ei"));
+            //Console.WriteLine(result);
+            #endregion
+            #region 2. Return grouped a list of products only for categories that have at least one product that is out of stock.
+            //var result = ProductsList.GroupBy(c => c.Category)
+            //    .Where(g=>g.Any(p=>p.UnitsInStock==0))
+            //    .Select(g => new { Category = g.Key, Products = g.ToList() });
+
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine($"Category: {group.Category}");
+            //    foreach (var product in group.Products)
+            //    {
+            //        Console.WriteLine($"   {product.ProductName} - Stock: {product.UnitsInStock}");
+            //    }
+            //}
+            #endregion
+            #region 3. Return a grouped list of products only for categories that have all of their products in stock.
+            //var result=ProductsList.GroupBy(c=>c.Category)
+            //    .Where(g=>g.All(p=>p.UnitsInStock!=0))
+            //    .Select(g => new {Category=g.Key,Products=g.ToList()});
+
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine($"Category=> {group.Category}");
+            //    foreach (var product in group.Products)
+            //    {
+            //        Console.WriteLine($"--------{product.ProductName}-{product.UnitsInStock}");
+            //    }
+            //}
+            #endregion
+
+            #endregion
+            #region LINQ – Grouping Operators
+            #region 1.Use group by to partition a list of numbers by their remainder when divided by 5
+            //List<int> nums = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+            //var result = nums.GroupBy(n => n % 5);
+            //foreach (var Group in result)
+            //{
+            //    Console.WriteLine($"Reminder=>{Group.Key}");
+            //    foreach (var num in Group)
+            //    {
+            //        Console.WriteLine(num);
+            //    }
+            //}
+
+            #endregion
+            #region 2.Uses group by to partition a list of words by their first letter.Use dictionary_english.txt for Input
+            //var lines = File.ReadAllLines("dictionary_english.txt");
+            //var result = lines.GroupBy(w => w[0]).OrderBy(g => g.Key); 
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine($"Word that begins with Letter {group.Key}");
+            //    foreach (var word in group)
+            //    {
+            //        Console.WriteLine($"----{word}");
+            //    }
+
+            //}
+
+
+            #endregion
+            #region 3. Use Group By with a custom comparer that matches words that are consists of the same Characters Together
+            //string[] Arr = { "from", "salt", "earn", "last", "near", "form" };
+            //var result = Arr.GroupBy(w => new string(w.OrderBy(c => c).ToArray())
+            //);
+            //foreach (var group in result)
+            //{
+            //    Console.WriteLine($"Words with these Characters {group.Key}");
+            //    foreach (var word in group)
+            //    {
+            //        Console.WriteLine($"--{word}");
+            //    }
+            //}
             #endregion
             #endregion
 
